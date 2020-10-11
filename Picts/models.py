@@ -35,6 +35,6 @@ class Collection(models.Model):
     用户id-图片id
     收藏时间
     """
-    user_id = models.ForeignKey(User)
-    pict_id = models.ForeignKey(Pict)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    pict_id = models.ForeignKey(Pict, on_delete=models.CASCADE)
     collect_date = models.DateTimeField("收藏时间", auto_now=True)
