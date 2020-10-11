@@ -38,3 +38,7 @@ class Collection(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     pict_id = models.ForeignKey(Pict, on_delete=models.CASCADE)
     collect_date = models.DateTimeField("收藏时间", auto_now=True)
+class UserInfo(models.Model):
+    nid = models.AutoField(primary_key=True)
+    ##头像是一个FileField——注意这里必须是“相对路径”，不能是/avatars/这样的绝对路径
+    avatar = models.FileField(upload_to='avatars/',default='avatars/default.jpg')
