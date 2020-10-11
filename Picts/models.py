@@ -1,29 +1,40 @@
 from django.db import models
 import django.utils.timezone as timezone
+
+
 # Create your models here.
-class User (models.Model):
-    user_id = models.CharField(max_length =10, primary_key=True)
-    nick_name = models.CharField(max_length =20)
+class User(models.Model):
+    """
+    用户id 昵称 密码 头像 城市 职业 注册时间 最后登录
+    """
+    user_id = models.CharField(max_length=20, primary_key=True)
+    nick_name = models.CharField(max_length=20)
     password = models.CharField(max_length=30)
-    portrait = models.Imagefield("portrait",upload_to ="picts\portrait",blank = False, null = False)
+    portrait = models.ImageField("portrait", upload_to="picts\\portrait", blank=False, null=False)
     city = models.CharField(max_length=20)
     occupation = models.CharField(max_length=20)
-    sign_time = models.DateTimeField('注册时间',default = timezone.now)
-    last_time = models.DateTimeField("最后登陆时间",auto_now = True)
+    sign_time = models.DateTimeField('注册时间', default=timezone.now)
+    last_time = models.DateTimeField("最后登陆时间", auto_now=True)
 
-class Pict (models.Model):
-    pict_id =models.CharField(max_length=10,primary_key=True)
-    love_num =models.CharField(max_length=30)
-    kind =models.CharField(max_length=10)
-    uploader_time = models.DateTimeField("上传时间",auto_now = True)
 
-class Kind (models.Model):
-    kind_name = models.CharField(max_length=30,unique=True)
+class Kind(models.Model):
+    """ 类型名称 """
+    kind_name = models.CharField(max_length=30, unique=True)
 
-class Collection (models.Model):
+
+class Pict(models.Model):
+    """ 图片id 喜爱数目 类型 上传时间 """
+    pict_id = models.CharField(max_length=30, primary_key=True)
+    love_num = models.CharField(max_length=30)
+    kind = models.ManyToManyField(Kind, related_name="pict_kind")
+    uploader_time = models.DateTimeField("上传时间", auto_now=True)
+
+
+class Collection(models.Model):
+    """
+    用户id-图片id
+    收藏时间
+    """
     user_id = models.ForeignKey(User)
     pict_id = models.ForeignKey(Pict)
-    collect_date= models.DateTimeField("收藏时间",auto_now = True)
-
-
-
+    collect_date = models.DateTimeField("收藏时间", auto_now=True)
