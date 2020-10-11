@@ -2,7 +2,9 @@ import datetime
 
 from django.shortcuts import render
 # my packages
-feom datetime im
+from datetime import datetime
+from django.http import HttpRequest
+
 
 # Create your views here.
 def index(request):
