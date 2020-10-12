@@ -24,7 +24,8 @@ from Picts import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/',views.index),
-    path('user/',views.user),
+    path('', views.index, name="index"),
+    path('index/', views.index, name="index"),
+    path('user/', views.user, name="user"),
 ]
 re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
