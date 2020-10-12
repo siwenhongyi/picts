@@ -12,7 +12,16 @@ def index(request ):
         "index.html"
     )
 
-
+def photo(request):
+    return render(
+        request,
+        "photo.html"
+    )
+def person(request):
+    return render(
+        request,
+        "person.html"
+    )
 def user(request):
     return render(
         request,
