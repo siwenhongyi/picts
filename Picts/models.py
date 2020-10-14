@@ -26,6 +26,7 @@ class Pict(models.Model):
     """ 图片id 喜爱数目 类型 上传时间 """
     pict_id = models.CharField(max_length=30, primary_key=True)
     love_num = models.CharField(max_length=30)
+    pic_url = models.ImageField(upload_to="background/", blank=False, null=False, default="66")
     kind = models.ManyToManyField(Kind, related_name="pict_kind")
     uploader_time = models.DateTimeField("上传时间", auto_now=True)
 
@@ -38,7 +39,8 @@ class Collection(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     pict_id = models.ForeignKey(Pict, on_delete=models.CASCADE)
     collect_date = models.DateTimeField("收藏时间", auto_now=True)
+
+
 class UserInfo(models.Model):
     nid = models.AutoField(primary_key=True)
-    ##头像是一个FileField——注意这里必须是“相对路径”，不能是/avatars/这样的绝对路径
-    avatar = models.FileField(upload_to='avatars/',default='avatars/default.jpg')
+    avatar = models.FileField(upload_to='avatars/', default='avatars/default.jpg')

@@ -19,6 +19,11 @@
                     search: <input type="text" name="information" />
                     <input type="submit" value="搜索" />
                 </form>
+                {% csrf_token %}
+                <form action="/up_img/" method="post" enctype="multipart/form-data">
+                    <input class="file" type="file" name =picture />
+                    <input type="submit" value="提交文件">
+                </form>
             </div>
           </form>
             <li><a href="">唯美风</a></li>

@@ -10,6 +10,7 @@ import json
 
 
 # Create your views here.
+from App import settings
 from Picts.models import Pict,Kind
 
 path = '/Picts/static/background'
@@ -53,3 +54,12 @@ def photo(request):
                       'photos':search_photos
                   }
     )
+def up_img(request):
+    pic = request.FILES.get('picture')
+    model = Pict()
+    model.pict_id = "66"
+    model.pic_url = pic
+    print(model.pic_url)
+    model.save()
+    return HttpResponse('图片上传成功')
+
