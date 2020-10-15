@@ -1,4 +1,5 @@
 *.pyc
 .idea/
 venv/
-Picts/migrations/
+Picts/migrations
+
