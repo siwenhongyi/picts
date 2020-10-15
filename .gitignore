@@ -2,3 +2,4 @@
 .idea/
 venv/
 Picts/migrations/
+*.sqlite*
