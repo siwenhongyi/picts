@@ -25,7 +25,7 @@ class Kind(models.Model):
 class Pict(models.Model):
     """ 图片id 喜爱数目 类型 上传时间 """
     pict_id = models.CharField(max_length=30, primary_key=True)
-    love_num = models.CharField(max_length=30)
+    love_num = models.IntegerField(default=0)
     pic_url = models.ImageField(upload_to="background/", blank=False, null=False, default="66")
     kind = models.ManyToManyField(Kind, related_name="pict_kind")
     uploader_time = models.DateTimeField("上传时间", auto_now=True)

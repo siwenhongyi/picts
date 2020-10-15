@@ -11,14 +11,14 @@ import json
 
 # Create your views here.
 from App import settings
-from Picts.models import Pict,Kind
+from Picts.models import Pict, Kind
 
 path = '/Picts/static/background'
 
 
 def index(request):
     assert (request, HttpRequest)
-    f = os.listdir(os.getcwd()+path)
+    f = os.listdir(os.getcwd() + path)
     cnt = len(f)
     x = random.randint(0, cnt)
     name = 'LOL_122.jpg'
@@ -34,26 +34,34 @@ def index(request):
             'background_img_name': json.dumps([name]),
         }
     )
+
+
 def person(request):
     return render(
         request,
         "person.html",
     )
+
+
 def user(request):
     return render(
         request,
         "user.html",
     )
+
+
 def photo(request):
     search_photos = Pict()
-    kind = Kind.objects.filter(kind_name = request.POST.get("information"))
+    kind = Kind.objects.filter(kind_name=request.POST.get("information"))
     print(kind)
     search_photos = Pict.objects.filter(kind=kind)
-    return render(request,'photo.html',
+    return render(request, 'photo.html',
                   {
-                      'photos':search_photos
+                      'photos': search_photos
                   }
-    )
+                  )
+
+
 def up_img(request):
     pic = request.FILES.get('picture')
     model = Pict()
@@ -62,4 +70,3 @@ def up_img(request):
     print(model.pic_url)
     model.save()
     return HttpResponse('图片上传成功')
-
