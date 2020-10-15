@@ -35,7 +35,7 @@ def index(request):
             model.kind.add(kinds[ran2])
             kind_need.append(kinds[ran2])
         index += 1
-    return HttpResponse('图片上传成功')
+        model.save()
     f = os.listdir(os.getcwd() + path)
     cnt = len(f)
     x = random.randint(0, cnt)
