@@ -16,7 +16,7 @@ from Picts.models import Pict, Kind
 path = '/Picts/static/background'
 
 
-def index(request):
+def init():
     f1 = os.listdir(os.getcwd() + path)
     kind_n = Kind.objects.all().count()
     kinds = Kind.objects.all()
@@ -25,7 +25,7 @@ def index(request):
         ran1 = random.randint(2, 3)
         model = Pict()
         model.pict_id = str(index)
-        model.pic_url = i
+        model.pic_url = os.path.join('background',i)
         kind_need = []
         model.save()
         while len(kind_need) != ran1:
@@ -36,6 +36,10 @@ def index(request):
             kind_need.append(kinds[ran2])
         index += 1
         model.save()
+
+
+def index(request):
+    # init()
     f = os.listdir(os.getcwd() + path)
     cnt = len(f)
     x = random.randint(0, cnt)
@@ -72,10 +76,12 @@ def photo(request):
     search_photos = Pict()
     kind = Kind.objects.filter(kind_name=request.POST.get("information"))
     print(kind)
-    search_photos = Pict.objects.filter(kind=kind)
-    return render(request, 'photo.html',
+    search_photos = Pict.objects.filter(kind=kind[0])
+    print(search_photos)
+    return render(request,
+                  'photo.html',
                   {
-                      'photos': search_photos
+                      "photos": search_photos,
                   }
                   )
 

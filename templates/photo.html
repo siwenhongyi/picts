@@ -10,28 +10,19 @@
 </head>
 <body>
     <div class="pic_list_con">
-        <h3><span>图片展示</span></h3>
-        {% for mit in search_photos %}
-        <ul class="clearfix">
-            <li><a href="" ><img src="/static/background/1.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/2.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/3.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/4.jpg" alt="商品图片"></a></li>
+        <h3>
+            <span>图片展示</span>
+        </h3>
+
+            <ul class="clearfix">
+                     {% for mit in photos %}
+                         <li>
+                         <a href=""><img src= "../static/{{ mit.pic_url }}"></a>
+                         </li>
+                     {% endfor %}
+            </ul>
+
             
-        </ul>
-        <ul class="clearfix">
-            <li><a href=""><img src="/static/background/6.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/7.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/8.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/9.jpg" alt="商品图片"></a></li>
-        </ul>
-        <ul class="clearfix">
-            <li><a href=""><img src="/static/background/11.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/12.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/13.jpg" alt="商品图片"></a></li>
-            <li><a href=""><img src="/static/background/14.jpg" alt="商品图片"></a></li>
-        </ul>
-      {% endfor %}
     </div>
 
 </body>

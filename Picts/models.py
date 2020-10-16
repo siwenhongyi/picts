@@ -32,7 +32,8 @@ class Pict(models.Model):
     pic_url = models.ImageField(upload_to="background/", blank=False, null=False, default="66")
     kind = models.ManyToManyField(Kind, related_name="pict_kind")
     uploader_time = models.DateTimeField("上传时间", auto_now=True)
-
+    def __str__(self):
+        return self.pict_id
 
 class Collection(models.Model):
     """

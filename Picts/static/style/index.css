@@ -19,18 +19,18 @@ li{
 
 
 a{
-  display: block;
-  width: 100px;
-  height: 50px;
-  font-family: Microsoft Yahei;
-  line-height: 50px;
-  background-color: #dc143c;
-  margin: 0px 0px;
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  font-size: 15px;
-}
+				display: block;
+				width: 100px;
+				height: 50px;
+				font-family: Microsoft Yahei;
+				line-height: 50px;
+				background-color: crimson;
+				margin: 0px 0px;
+				color: #fff;
+				text-align: center;
+				text-decoration: none;
+				font-size: 15px;
+			}
 
 a:hover{
   background-color: #2f6f4f;

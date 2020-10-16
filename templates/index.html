@@ -13,24 +13,56 @@
         <a href=""> 登录/注册</a>
     </div>
 	<div>
+
         <ul class=daohanglan>
             <div class="12">
                 <form action="/photo/" method="post">
                     search: <input type="text" name="information" />
                     <input type="submit" value="搜索" />
                 </form>
-                {% csrf_token %}
-                <form action="/up_img/" method="post" enctype="multipart/form-data">
-                    <input class="file" type="file" name =picture />
-                    <input type="submit" value="提交文件">
-                </form>
+{#                <form action="/photo/" method="post" enctype="multipart/form-data">#}
+{#                    <input class="file" type="file" name="pic"  />#}
+{#                    <input type="submit" value="提交文件">#}
+{#                </form>#}
             </div>
-          </form>
-            <li><a href="">唯美风</a></li>
-            <li><a href="">可爱风</a></li>
-				<li><a href="">哥特风</a></li>
-				<li><a href="">性感风</a></li>
-				<li><a href="">慵懒风</a></li>
+         
+                
+                <li>
+                    <form action="/photo/" method="post">
+                        <a href="">                        
+                            <button type="submit" formmethod="post" formaction="/photo/" name="information" value="唯美"  >唯美风</button>
+                        </a>
+                        </form>
+                </li>
+                <li>
+                    <form action="/photo/" method="post">
+                        <a href="">                        
+                            <button type="submit" formmethod="post" formaction="/photo/" name="information" value="哥特"  >哥特风</button>
+                        </a>
+                        </form>
+                </li>
+                <li>
+                    <form action="/photo/" method="post">
+                        <a href="">                        
+                            <button type="submit" formmethod="post" formaction="/photo/" name="information" value="性感"  >性感风</button>
+                        </a>
+                        </form>
+                </li>
+                <li>
+                    <form action="/photo/" method="post">
+                        <a href="">                        
+                            <button type="submit" formmethod="post" formaction="/photo/" name="information" value="可爱"  >可爱风</button>
+                        </a>
+                        </form>
+                </li>
+                <li>
+                    <form action="/photo/" method="post">
+                        <a href="">
+                            <button type="submit" formmethod="post" formaction="/photo/" name="information" value="慵懒"  >慵懒风</button>
+                        </a>
+                        </form>
+                </li>
+
 			</ul>
 		</div>
 </body>
