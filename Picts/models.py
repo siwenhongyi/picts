@@ -1,20 +1,30 @@
 from django.db import models
 import django.utils.timezone as timezone
 
-
+TOPIC_CHOICES = (
+        ('male', '男'),
+        ('female', '女'),
+)
 # Create your models here.
 class User(models.Model):
     """
     用户id 昵称 密码 头像 城市 职业 注册时间 最后登录
     """
+    gender = (
+        ('male', '男'),
+        ('female', '女'),
+    )
+
     user_id = models.CharField(max_length=20, primary_key=True)
-    nick_name = models.CharField(max_length=20)
+    nick_name = models.CharField(max_length=20,unique=True)
     password = models.CharField(max_length=30)
     portrait = models.ImageField("portrait", upload_to="picts\\portrait", blank=False, null=False)
     city = models.CharField(max_length=20)
+    sex = models.CharField(max_length=32, choices=gender, default='男')
     occupation = models.CharField(max_length=20)
-    sign_time = models.DateTimeField('注册时间', default=timezone.now)
+    c_time = models.DateTimeField(auto_now_add=True)
     last_time = models.DateTimeField("最后登陆时间", auto_now=True)
+
 
 
 class Kind(models.Model):

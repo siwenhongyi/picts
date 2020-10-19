@@ -1,19 +1,39 @@
 import datetime
 
+from django import forms
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 import os
 import random
 import json
 
-# my packages
+# my packagesnn
 
 
 # Create your views here.
 from App import settings
-from Picts.models import Pict, Kind
+from Picts.models import Pict, Kind, User, TOPIC_CHOICES
 
 path = '/Picts/static/background'
+
+
+class LoginForm(forms.Form):
+    user_id = forms.CharField(min_length=6,max_length=10,required=True,)
+    nick_name = forms.CharField(required=True, error_messages={'required': '用户名不能为空'})
+    password = forms.CharField(required=True,
+                               min_length=6,
+                               max_length=10,
+                               error_messages={'required': '密码不能为空', 'min_length': '至少6位',
+                                               'max_length': '至多10位'}
+                               )
+    city = forms.CharField(required=False, label='城市')
+    sex = forms.ChoiceField(label='性别',choices=TOPIC_CHOICES)
+    occupation =forms.CharField(required=False, label='职业')
+    portrait =forms.IntegerField( label="头像")
+
+
+
+
 
 
 def init():
@@ -71,7 +91,52 @@ def user(request):
         "user.html",
     )
 
+def login(request):
+    if request.POST:
+        objPost = LoginForm(request.POST)
+        ret = objPost.is_valid()
+        if ret:
+            print(objPost.clean())
+        else:
+            from django.forms.utils import ErrorDict
+            print(type(objPost.errors),objPost.errors.as_json())
+        return render(request, 'index.html', {'data': objPost})
+    else:
+        objGet = LoginForm()
+        return render(request, 'login.html', {'data': objGet})
 
+def register(request):
+    if request.method == 'POST':
+        pf = LoginForm(request.POST)
+        if pf.is_valid():
+            # 获取表单元素
+            user_id = pf.cleaned_data[' user_id ']
+            nick_name = pf.cleaned_data['nick_name ']
+            password = pf.cleaned_data['password ']
+            portrait = pf.cleaned_data['portrait ']
+            city = pf.cleaned_data['city ']
+            sex = pf.cleaned_data['sex ']
+            occupation  = pf.cleaned_data['occupation ']
+            c_time  = pf.cleaned_data['c_time ']
+            last_time  = pf.cleaned_data['last_time ']
+
+            # 将表单写入数据库
+            user = User()
+            user.user_id = user_id
+            user.nick_name = nick_name
+            user.password = password
+            user.portrait = portrait
+            user.city = city
+            user.sex = sex
+            user.occupation  = occupation
+            user.c_time = c_time
+            user.last_time = last_time
+            user.save()
+            # 返回注册成功页面
+            return render('success.html', {'portrait': portrait})
+    else:
+        pf = LoginForm()
+    return render('register.html', {'pf': pf})
 def photo(request):
     search_photos = Pict()
     kind = Kind.objects.filter(kind_name=request.POST.get("information"))

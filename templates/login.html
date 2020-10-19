@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .error-msg{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <form action="/login/" method="POST">
+        <div>
+            <div>
+                {{ data.nick_name }}
+                {% if data.errors.nick_name %}
+                    <span class="error-msg">{{ data.errors.nick_name.0 }}</span>
+                {% endif %}
+            </div>
+            <div>
+                {{ data.password }}
+                {% if data.errors.password %}
+                    <span class="error-msg">{{ data.errors.password.0 }}</span>
+                {% endif %}
+            </div>
+            <div>
+                {{ data.city }}
+                {% if data.errors.city %}
+                    <span class="error-msg">{{ data.errors.city.0 }}</span>
+                {% endif %}
+            </div>
+            <div>
+                {{ data.occupation }}
+                {% if data.errors.occupation %}
+                    <span class="error-msg">{{ data.errors.occupation.0 }}</span>
+                {% endif %}
+            </div>
+            <div>
+                {{ data.portrait }}
+                {% if data.errors.portrait %}
+                    <span class="error-msg">{{ data.errors.portrait.0 }}</span>
+                {% endif %}
+            </div>
+            <div>
+                {{ data.sex }}
+                {% if data.errors.sex %}
+                    <span class="error-msg">{{ data.errors.sex.0 }}</span>
+                {% endif %}
+            </div>
+            <div>
+                {{ data.user_id }}
+                {% if data.errors.user_id %}
+                    <span class="error-msg">{{ data.errors.user_id.0 }}</span>
+                {% endif %}
+            </div>
+            >
+            <input type="submit" value="提交" />
+        </div>
+    </form>
+</body>
+</html>
