@@ -27,9 +27,9 @@ class LoginForm(forms.Form):
                                                'max_length': '至多10位'}
                                )
     city = forms.CharField(required=False, label='城市')
-    sex = forms.ChoiceField(label='性别',choices=TOPIC_CHOICES)
+    sex = forms.CharField(required=False,label='性别')
     occupation =forms.CharField(required=False, label='职业')
-    portrait =forms.IntegerField( label="头像")
+    portrait =forms.URLField()
 
 
 
@@ -110,15 +110,14 @@ def register(request):
         pf = LoginForm(request.POST)
         if pf.is_valid():
             # 获取表单元素
-            user_id = pf.cleaned_data[' user_id ']
-            nick_name = pf.cleaned_data['nick_name ']
-            password = pf.cleaned_data['password ']
-            portrait = pf.cleaned_data['portrait ']
-            city = pf.cleaned_data['city ']
-            sex = pf.cleaned_data['sex ']
-            occupation  = pf.cleaned_data['occupation ']
-            c_time  = pf.cleaned_data['c_time ']
-            last_time  = pf.cleaned_data['last_time ']
+            user_id = pf.cleaned_data['user_id']
+            nick_name = pf.cleaned_data['nick_name']
+            password = pf.cleaned_data['password']
+            portrait = pf.cleaned_data['portrait']
+            city = pf.cleaned_data['city']
+            sex = pf.cleaned_data['sex']
+            occupation = pf.cleaned_data['occupation']
+
 
             # 将表单写入数据库
             user = User()
@@ -128,15 +127,14 @@ def register(request):
             user.portrait = portrait
             user.city = city
             user.sex = sex
-            user.occupation  = occupation
-            user.c_time = c_time
-            user.last_time = last_time
+            user.occupation = occupation
+
             user.save()
             # 返回注册成功页面
-            return render('success.html', {'portrait': portrait})
+            return render(request,'index.html', {'portrait': portrait})
     else:
         pf = LoginForm()
-    return render('register.html', {'pf': pf})
+    return render(request,'register.html', {'pf': pf})
 def photo(request):
     search_photos = Pict()
     kind = Kind.objects.filter(kind_name=request.POST.get("information"))
