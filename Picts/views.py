@@ -1,8 +1,10 @@
 import datetime
 
 from django import forms
-from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.contrib.auth import authenticate
+from django.shortcuts import render, redirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.forms.boundfield import  BoundField
 import os
 import random
 import json
@@ -11,15 +13,37 @@ import json
 
 
 # Create your views here.
+from django.urls import reverse
+from django.views.generic.base import View
+
 from App import settings
 from Picts.models import Pict, Kind, User, TOPIC_CHOICES
 
 path = '/Picts/static/background'
 
 
+class login(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, ' login.html', locals())
+
+    def post(self, request, *args, **kwargs):
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            username = login_form.cleaned_data['username ']
+            password = login_form.cleaned_data[' password']
+            user = authenticate(username=username, pasSword=password)
+            if user is not None:
+                login(request, user)
+                return redirect(reverse('index'))
+            else:
+                return render(request, 'login.html', {'msg': '用户 名或密码错误', 'login form': login_form})
+        else:
+            return render(request, 'login.html', {'login_ form': login_form})
+
+
 class LoginForm(forms.Form):
-    user_id = forms.CharField(min_length=6,max_length=10,required=True,)
-    nick_name = forms.CharField(required=True, error_messages={'required': '用户名不能为空'})
+    user_id = forms.CharField(min_length=6, max_length=10, required=True)
+    nick_name = forms.CharField(required=False, error_messages={'required': '用户名不能为空'})
     password = forms.CharField(required=True,
                                min_length=6,
                                max_length=10,
@@ -27,13 +51,9 @@ class LoginForm(forms.Form):
                                                'max_length': '至多10位'}
                                )
     city = forms.CharField(required=False, label='城市')
-    sex = forms.CharField(required=False,label='性别')
-    occupation =forms.CharField(required=False, label='职业')
-    portrait =forms.URLField()
-
-
-
-
+    sex = forms.CharField(required=False, label='性别')
+    occupation = forms.CharField(required=False, label='职业')
+    portrait = forms.URLField(required=False)
 
 
 def init():
@@ -45,7 +65,7 @@ def init():
         ran1 = random.randint(2, 3)
         model = Pict()
         model.pict_id = str(index)
-        model.pic_url = os.path.join('background',i)
+        model.pic_url = os.path.join('background', i)
         kind_need = []
         model.save()
         while len(kind_need) != ran1:
@@ -91,19 +111,34 @@ def user(request):
         "user.html",
     )
 
+
+def HttpCookie(param):
+    pass
+
+
 def login(request):
-    if request.POST:
+    if request.method == "POST":
         objPost = LoginForm(request.POST)
         ret = objPost.is_valid()
-        if ret:
-            print(objPost.clean())
+        if not ret:
+            print(type(objPost.errors), objPost.errors.as_json())
+            return render(request, 'index.html', {'data': objPost})
         else:
-            from django.forms.utils import ErrorDict
-            print(type(objPost.errors),objPost.errors.as_json())
-        return render(request, 'index.html', {'data': objPost})
+            data = objPost.cleaned_data
+            user = User.objects.filter(user_id=data["user_id"])
+            if len(user) == 1 and user[0].password == data["password"]:
+                secure = random.randint(0,100000)
+                response = HttpResponseRedirect('/index/')
+                response.set_cookie('user_id',user[0].user_id, 3600)
+                response.set_cookie('portrait', user[0].portrait, 3600)
+                response.set_cookie('IS_LOGIN',True, 3600)
+                response.set_cookie('token',secure, 3600)
+                request.session['token'] = secure
+                return response
     else:
         objGet = LoginForm()
         return render(request, 'login.html', {'data': objGet})
+
 
 def register(request):
     if request.method == 'POST':
@@ -118,7 +153,6 @@ def register(request):
             sex = pf.cleaned_data['sex']
             occupation = pf.cleaned_data['occupation']
 
-
             # 将表单写入数据库
             user = User()
             user.user_id = user_id
@@ -131,10 +165,12 @@ def register(request):
 
             user.save()
             # 返回注册成功页面
-            return render(request,'index.html', {'portrait': portrait})
+            return render(request, 'index.html', {'portrait': portrait})
     else:
         pf = LoginForm()
-    return render(request,'register.html', {'pf': pf})
+    return render(request, 'register.html', {'pf': pf})
+
+
 def photo(request):
     search_photos = Pict()
     kind = Kind.objects.filter(kind_name=request.POST.get("information"))
