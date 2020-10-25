@@ -2,28 +2,70 @@
 <html lang="en">
 <head>
     {% load static %}
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href= {% static "style/photo.css" %}>
-	<title>tupian</title>
+    <script src={% static "scripts/jquery-1.10.2.min.js" %} ></script>
+    <title>tupian</title>
 </head>
 <body>
-    <div class="pic_list_con">
-        <h3>
-            <span>图片展示</span>
-        </h3>
+<div class="pic_list_con">
+    <h3>
+        <span>图片展示</span>
+    </h3>
 
-            <ul class="clearfix">
-                     {% for mit in photos %}
-                         <li>
-                         <a href=""><img src= "../static/{{ mit.pic_url }}"></a>
-                         </li>
-                     {% endfor %}
-            </ul>
+    <ul class="clearfix">
+        {% for mit in photos %}
+            <li>
+                <a href=""><img src= "../static/{{ mit.pic_url }}"></a>
+                <article class="htmleaf-container">
+                    <div id="container">
+                        <div class="feed" id="feed1">
+                            <div class="heart" data-id={{ mit.pict_id }} rel="like">
+                                <div>&#10084;</div>
+                                <div class="likeCount" id = {{  mit.pict_id }}>{{ mit.love_num }}
+                                </div>
+                            </div>
+                        </div></div>
+                </article>
+            </li>
+        {% endfor %}
+    </ul>
 
-            
-    </div>
+
+</div>
 
 </body>
 </html>
+
+<script>
+    $(function () {
+        $(".heart").click(function () {
+            $(this).toggleClass('cs');
+        })
+    })
+    $(document).ready(function()
+    {
+        $('body').on("click",'.heart',function()
+        {
+            var father = $(this).attr("data-id");
+            var like_num = parseInt(document.getElementById(father).innerText)
+            $(this).css("background-position","")
+            var status = $(this).attr("rel");
+            if(status === 'like')
+            {
+                $("#"+father).html(like_num+1);
+                $(this).addClass("heartAnimation").attr("rel","unlike");
+            }
+            else
+            {
+                $("#"+father).html(like_num-1);
+                $(this).removeClass("heartAnimation").attr("rel","like");
+                $(this).css("background-position","left");
+            }
+        });
+
+    });
+</script>
+
