@@ -31,6 +31,7 @@ urlpatterns = [
     path('user/', views.user, name="user"),
     path('up_img/',views.up_img,name="up_img"),
     path('login/',views.login,name="login"),
-    path('register/',views.register,name="register")
+    path('register/',views.register,name="register"),
+    path('like_heart',views.change_like, name="change_like"),
 ]
 re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),

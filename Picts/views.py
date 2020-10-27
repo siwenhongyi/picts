@@ -3,8 +3,8 @@ import datetime
 from django import forms
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.forms.boundfield import  BoundField
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.forms.boundfield import BoundField
 import os
 import random
 import json
@@ -17,7 +17,7 @@ from django.urls import reverse
 from django.views.generic.base import View
 
 from App import settings
-from Picts.models import Pict, Kind, User, TOPIC_CHOICES
+from Picts.models import *
 
 path = '/Picts/static/background'
 
@@ -43,12 +43,12 @@ class login(View):
 
 class LoginForm(forms.Form):
     user_id = forms.CharField(min_length=6, max_length=10, required=True)
-    nick_name = forms.CharField(required=False, error_messages={'required': '用户名不能为空'})
+    nick_name = forms.CharField(required=False, error_messages={'required': 'user_id not null'})
     password = forms.CharField(required=True,
                                min_length=6,
                                max_length=10,
-                               error_messages={'required': '密码不能为空', 'min_length': '至少6位',
-                                               'max_length': '至多10位'}
+                               error_messages={'required': 'password not null', 'min_length': 'min_length = 6',
+                                               'max_length': 'max_length = 10'}
                                )
     city = forms.CharField(required=False, label='城市')
     sex = forms.CharField(required=False, label='性别')
@@ -127,14 +127,17 @@ def login(request):
             data = objPost.cleaned_data
             user = User.objects.filter(user_id=data["user_id"])
             if len(user) == 1 and user[0].password == data["password"]:
-                secure = random.randint(0,100000)
+                secure = random.randint(0, 100000)
                 response = HttpResponseRedirect('/index/')
-                response.set_cookie('user_id',user[0].user_id, 3600)
+                response.set_cookie('user_id', user[0].user_id, 3600)
+                print(user[0].user_id)
                 response.set_cookie('portrait', user[0].portrait, 3600)
-                response.set_cookie('IS_LOGIN',True, 3600)
-                response.set_cookie('token',secure, 3600)
+                response.set_cookie('IS_LOGIN', True, 3600)
+                response.set_cookie('token', secure, 3600)
                 request.session['token'] = secure
                 return response
+            else:
+                return render(request, 'login.html', {'data': LoginForm()})
     else:
         objGet = LoginForm()
         return render(request, 'login.html', {'data': objGet})
@@ -174,15 +177,47 @@ def register(request):
 def photo(request):
     search_photos = Pict()
     kind = Kind.objects.filter(kind_name=request.POST.get("information"))
-    print(kind)
     search_photos = Pict.objects.filter(kind=kind[0])
-    print(search_photos)
+    user_id = request.COOKIES.get('user_id', "")
     return render(request,
                   'photo.html',
                   {
                       "photos": search_photos,
+                      "user_id": user_id,
                   }
                   )
+
+
+def change_like(request):
+    user_id = request.POST.get('user', "")
+    pict_id = request.POST.get('pict_id')
+    picts = Pict.objects.filter(pict_id=pict_id)
+    user = User.objects.filter(user_id=user_id)
+    data = dict()
+    need = True
+    if len(picts) != 1:
+        data['pict_lens'] = len(picts)
+        need = need and False
+    if len(user) != 1:
+        data['user_id'] = len(user)
+        need = need and False
+    if need:
+        pict = picts.first()
+        user = user.first()
+        data['status'] = 'OK'
+        if request.POST.get("status","") == 'add':
+            pict.love_num += 1
+            new_like = Collection()
+            new_like.user_id = user
+            new_like.pict_id = pict
+            new_like.save()
+            pict.save()
+        else:
+            for i in Collection.objects.filter(user_id=user.user_id, pict_id=pict.pict_id):
+                i.pict_id.love_num -= 1
+                i.pict_id.save()
+                i.delete()
+    return JsonResponse(data)
 
 
 def up_img(request):

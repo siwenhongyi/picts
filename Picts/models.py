@@ -2,9 +2,11 @@ from django.db import models
 import django.utils.timezone as timezone
 
 TOPIC_CHOICES = (
-        ('male', '男'),
-        ('female', '女'),
+    ('male', '男'),
+    ('female', '女'),
 )
+
+
 # Create your models here.
 class User(models.Model):
     """
@@ -12,15 +14,14 @@ class User(models.Model):
     """
 
     user_id = models.CharField(max_length=20, primary_key=True)
-    nick_name = models.CharField(max_length=20,unique=True)
+    nick_name = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=30)
     portrait = models.ImageField("portrait", upload_to="picts\\portrait", blank=False, null=False)
     city = models.CharField(max_length=20)
     sex = models.CharField(max_length=32)
     occupation = models.CharField(max_length=20)
-    c_time = models.DateTimeField("注册时间",default=timezone.now)
+    c_time = models.DateTimeField("注册时间", default=timezone.now)
     last_time = models.DateTimeField("最后登陆时间", auto_now=True)
-
 
 
 class Kind(models.Model):
@@ -38,8 +39,10 @@ class Pict(models.Model):
     pic_url = models.ImageField(upload_to="background/", blank=False, null=False, default="66")
     kind = models.ManyToManyField(Kind, related_name="pict_kind")
     uploader_time = models.DateTimeField("上传时间", auto_now=True)
+
     def __str__(self):
         return self.pict_id
+
 
 class Collection(models.Model):
     """
